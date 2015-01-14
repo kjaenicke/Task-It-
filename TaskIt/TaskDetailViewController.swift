@@ -13,6 +13,7 @@ class TaskDetailViewController: UIViewController {
     @IBOutlet weak var subtaskTextField: UITextField!
     @IBOutlet weak var dueDatePicker: UIDatePicker!
     
+    var mainVC: MainViewController!
     var detailTaskModel: TaskModel!
 
     override func viewDidLoad() {
@@ -31,5 +32,13 @@ class TaskDetailViewController: UIViewController {
     }
     
     
+    @IBAction func cancelButtonTapped(sender: UIBarButtonItem) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
     
+    @IBAction func doneBarButtonItemPressed(sender: UIBarButtonItem) {
+        var task = TaskModel(task: taskTextField.text, subtask: subtaskTextField.text, date: dueDatePicker.date, completed: false)
+        mainVC.baseArray[0][mainVC.tableView.indexPathForSelectedRow()!.row] = task
+        self.navigationController?.popViewControllerAnimated(true)
+    }
 }

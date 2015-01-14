@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller-->
+        <!--Tasks-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="TaskIt" customModuleProvider="target" sceneMemberID="viewController">
@@ -62,17 +62,101 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="9AE-Ax-evi"/>
+                    <navigationItem key="navigationItem" title="Tasks" id="9AE-Ax-evi">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="LKe-tC-xwg">
+                            <connections>
+                                <action selector="addButtonTapped:" destination="BYZ-38-t0r" id="p6T-hN-KeR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="AYq-XJ-uS9" id="wdy-4M-ysS"/>
                         <segue destination="2NZ-Fp-WSm" kind="show" identifier="showTaskDetail" id="1Ct-Aa-2Y0"/>
+                        <segue destination="HFX-zG-Uxm" kind="presentation" identifier="showTaskAdd" id="6bw-nL-3Tr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2275" y="416"/>
         </scene>
-        <!--Task Detail View Controller-->
+        <!--Add Task View Controller-->
+        <scene sceneID="1lh-I0-o1v">
+            <objects>
+                <viewController id="HFX-zG-Uxm" customClass="AddTaskViewController" customModule="TaskIt" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lC5-NP-oQ0"/>
+                        <viewControllerLayoutGuide type="bottom" id="z2Y-yV-YBZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="L77-8V-v35">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95h-g3-5Y2">
+                                <rect key="frame" x="16" y="28" width="48" height="30"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelButtonTapped:" destination="HFX-zG-Uxm" eventType="touchUpInside" id="C0f-Df-sh5"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cf3-fQ-OZW">
+                                <rect key="frame" x="16" y="97" width="280" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xsV-O0-t13">
+                                <rect key="frame" x="16" y="191" width="280" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="BzZ-co-5OX">
+                                <rect key="frame" x="0.0" y="305" width="320" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="442896047.85850501">
+                                    <!--2015-01-14 02:40:47 +0000-->
+                                </date>
+                            </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Task" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zo1-gx-Hal">
+                                <rect key="frame" x="16" y="68" width="35" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Subtask" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHk-CE-QiI">
+                                <rect key="frame" x="16" y="161" width="63" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5p1-EJ-Cgh">
+                                <rect key="frame" x="16" y="276" width="36" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yHe-X8-qQd">
+                                <rect key="frame" x="232" y="28" width="64" height="30"/>
+                                <state key="normal" title="Add Task">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addTaskButtonTapped:" destination="HFX-zG-Uxm" eventType="touchUpInside" id="VT0-SH-4X7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="dueDatePicker" destination="BzZ-co-5OX" id="D56-Gz-6I7"/>
+                        <outlet property="subtaskTextField" destination="xsV-O0-t13" id="U6I-xm-GGT"/>
+                        <outlet property="taskTextField" destination="Cf3-fQ-OZW" id="k7H-sq-ijl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l7v-L3-gJ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3137" y="625"/>
+        </scene>
+        <!--Detail-->
         <scene sceneID="P8E-OC-6Lg">
             <objects>
                 <viewController id="2NZ-Fp-WSm" customClass="TaskDetailViewController" customModule="TaskIt" customModuleProvider="target" sceneMemberID="viewController">
@@ -103,6 +187,22 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="tXs-Nw-zP9"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Detail" id="554-D4-VUH">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="ZJ5-xx-NDV">
+                            <connections>
+                                <action selector="cancelButtonTapped:" destination="2NZ-Fp-WSm" id="X4e-Nz-b7B"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="UU5-xR-aso">
+                            <connections>
+                                <action selector="doneBarButtonItemPressed:" destination="2NZ-Fp-WSm" id="ftY-uu-Lf8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="dueDatePicker" destination="INR-HK-Ec9" id="ofs-0Y-OVQ"/>
                         <outlet property="subtaskTextField" destination="B8l-nY-Pkb" id="Txt-OW-eHJ"/>
