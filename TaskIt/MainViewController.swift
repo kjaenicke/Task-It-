@@ -7,31 +7,21 @@
 //
 
 import UIKit
+import CoreData
 
-class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     
-    var baseArray:[[TaskModel]] = []
+    let managedObjectContext = (UIApplication.sharedApplication().delegate as AppDelegate).managedObjectContext
+    
+    var fetchedResultsController = NSFetchedResultsController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
-        let date1 = Date.from(year: 2014, month: 05, day: 20)
-        let date2 = Date.from(year: 2014, month: 03, day: 3)
-        let date3 = Date.from(year: 2014, month: 12, day: 13)
-        
-        let task1 = TaskModel(task: "Study French", subtask: "Verbs", date: date1, completed: false)
-        let task2 = TaskModel(task: "Eat Dinner", subtask: "Burgers", date: date2, completed: false)
-        let task3 = TaskModel(task: "Gym", subtask: "Leg Day", date: date3, completed: false)
-        let taskArray = [task1, task2, task3]
-        
-        var completedArrary = [TaskModel(task: "Code", subtask: "Task Project", date: date2, completed: true)]
-        
-        baseArray = [taskArray, completedArrary]
-        
-        self.tableView.reloadData()
+        fetchedResultsController = getFetchResultsController()
+        fetchedResultsController.delegate = self
+        fetchedResultsController.performFetch(nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,27 +31,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        baseArray[0] = baseArray[0].sorted {
-            (taskOne: TaskModel, taskTwo: TaskModel) -> Bool in
-            // comparison logic here
-            return taskOne.date.timeIntervalSince1970 < taskTwo.date.timeIntervalSince1970
-        }
-        
-        self.tableView.reloadData()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showTaskDetail" {
             let detailVC:TaskDetailViewController = segue.destinationViewController as TaskDetailViewController
             let indexPath = self.tableView.indexPathForSelectedRow()
-            let thisTask = baseArray[indexPath!.section][indexPath!.row]
-            detailVC.mainVC = self
+            let thisTask = fetchedResultsController.objectAtIndexPath(indexPath!) as TaskModel
             detailVC.detailTaskModel = thisTask
         }
         else if segue.identifier == "showTaskAdd" {
             let addTaskVC:AddTaskViewController = segue.destinationViewController as AddTaskViewController
-            addTaskVC.mainVC = self
         }
     }
     
@@ -73,15 +53,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     //UITableViewDataSource
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return baseArray.count
+        return fetchedResultsController.sections!.count
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return baseArray[section].count
+        return fetchedResultsController.sections![section].numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let thisTask = baseArray[indexPath.section][indexPath.row]
+        let thisTask = fetchedResultsController.objectAtIndexPath(indexPath) as TaskModel
         var cell: TaskCell = tableView.dequeueReusableCellWithIdentifier("myCell") as TaskCell
         cell.taskLabel.text = thisTask.task
         cell.descriptionLabel.text = thisTask.subtask
@@ -108,20 +88,43 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        let thisTask = baseArray[indexPath.section][indexPath.row]
+        let thisTask = fetchedResultsController.objectAtIndexPath(indexPath) as TaskModel
         
         if indexPath.section == 0 {
-            var newTask = TaskModel(task: thisTask.task, subtask: thisTask.subtask, date: thisTask.date, completed: true)
-            baseArray[1].append(newTask)
+            thisTask.completed = true
         }
         else {
-            var newTask = TaskModel(task: thisTask.task, subtask: thisTask.subtask, date: thisTask.date, completed: false)
-            baseArray[0].append(newTask)
+            thisTask.completed = false
         }
         
-        baseArray[indexPath.section].removeAtIndex(indexPath.row)
+        //save whatever changes we make to our entity
+        (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
+    }
+    
+    //NSFetchedResultsControllerDelegate
+    
+    //if we have changes to our entities - reload the tableview
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView.reloadData()
     }
+    
+    //helpers
+    
+    func taskFetchRequest() -> NSFetchRequest {
+        let fetchRequest = NSFetchRequest(entityName: "TaskModel")
+        let sortDescription = NSSortDescriptor(key: "date", ascending: true)
+        let completedDescriptor = NSSortDescriptor(key: "completed", ascending: true)
+        fetchRequest.sortDescriptors = [completedDescriptor, sortDescription]
+        
+        return fetchRequest
+    }
+    
+    func getFetchResultsController() -> NSFetchedResultsController {
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: taskFetchRequest(), managedObjectContext: managedObjectContext!, sectionNameKeyPath: "completed", cacheName: nil)
+        
+        return fetchedResultsController
+    }
+    
     
     
 }
