@@ -19,6 +19,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.registerNib(UINib (nibName: "TestTaskCellTableViewCell", bundle: nil), forCellReuseIdentifier: "testId")
+        
         fetchedResultsController = getFetchResultsController()
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
@@ -62,9 +64,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let thisTask = fetchedResultsController.objectAtIndexPath(indexPath) as TaskModel
-        var cell: TaskCell = tableView.dequeueReusableCellWithIdentifier("myCell") as TaskCell
+        var cell: TestTaskCellTableViewCell = tableView.dequeueReusableCellWithIdentifier("testId") as TestTaskCellTableViewCell
         cell.taskLabel.text = thisTask.task
-        cell.descriptionLabel.text = thisTask.subtask
+        cell.subtaskLabel.text = thisTask.subtask
         cell.dateLabel.text = Date.toString(date:thisTask.date)
         return cell
     }
