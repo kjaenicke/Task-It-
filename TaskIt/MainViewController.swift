@@ -81,23 +81,31 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "To Do"
+        if (fetchedResultsController.sections?.count == 1){
+            let fetchedObjects = fetchedResultsController.fetchedObjects!
+            let testTask:TaskModel = fetchedObjects[0] as TaskModel
+            
+            if(testTask.completed == true){
+                return "Completed"
+            }
+            else {
+                return "To Do"
+            }
         }
         else {
-            return "Completed"
+            if section == 0 {
+                return "To Do"
+            }
+            else {
+                return "Completed"
+            }
         }
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         let thisTask = fetchedResultsController.objectAtIndexPath(indexPath) as TaskModel
         
-        if indexPath.section == 0 {
-            thisTask.completed = true
-        }
-        else {
-            thisTask.completed = false
-        }
+        thisTask.completed = !(thisTask.completed as Bool)
         
         //save whatever changes we make to our entity
         (UIApplication.sharedApplication().delegate as AppDelegate).saveContext()
